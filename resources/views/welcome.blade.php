@@ -28,7 +28,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <h2><b>Lista de empleados
-                            </b></h2>
+                                </b></h2>
                         </div>
                         <div class="col-sm-6">
                             <a href="#addEmployeeModal" class="btn btn-info" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Crear</span></a>
@@ -36,7 +36,7 @@
                     </div>
                 </div>
 
-                <table class="table table-striped table-hover" id="tablaEmpleados" >
+                <table class="table table-striped table-hover" id="tablaEmpleados">
                     <thead>
                         <tr>
                             <th style="width: 20%"><i class="fa-solid fa-user"></i> Nombre</th>
@@ -94,8 +94,8 @@
                         <div class="form-group">
                             <label><b>Sexo *</b></label>
                             <ul style="list-style: none;">
-                            <li><input type="radio" name="sexo" id="sexo" value="M">Masculino</li>
-                            <li><input type="radio" name="sexo" id="sexo" value="F">Femenino</li>
+                                <li><input type="radio" name="sexo" id="sexo" value="M">Masculino</li>
+                                <li><input type="radio" name="sexo" id="sexo" value="F">Femenino</li>
                             </ul>
                         </div>
                         <div class="form-group">
@@ -156,8 +156,8 @@
                         <div class="form-group">
                             <label>Sexo *</label>
                             <ul style="list-style: none;">
-                            <li><input type="radio" name="sexoEdit" id="sexoEditM" value="M">Masculino</li>
-                            <li><input type="radio" name="sexoEdit" id="sexoEditF" value="F">Femenino</li>
+                                <li><input type="radio" name="sexoEdit" id="sexoEditM" value="M">Masculino</li>
+                                <li><input type="radio" name="sexoEdit" id="sexoEditF" value="F">Femenino</li>
                             </ul>
                         </div>
                         <div class="form-group">
@@ -180,7 +180,7 @@
                             <ul style="list-style: none;">
                                 @foreach ($roles as $rol)
                                 <li>
-                                <input type="checkbox" name="rolesEdit" id="rolesEdit_{{$rol->id}}" value="{{$rol->id}}">{{$rol->nombre}}
+                                    <input type="checkbox" name="rolesEdit" id="rolesEdit_{{$rol->id}}" value="{{$rol->id}}">{{$rol->nombre}}
                                 </li>
                                 @endforeach
                             </ul>

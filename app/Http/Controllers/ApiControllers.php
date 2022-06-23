@@ -8,12 +8,11 @@ use App\Empleados;
 use App\EmpleadoRol;
 use Illuminate\Http\Request;
 use DB;
-use App\Menu;
 use Exception;
 
 class ApiControllers extends Controller
 {
-
+    /**Función para el guardado del empleado */
     public function guardar(Request $request)
     {
 
@@ -67,57 +66,17 @@ class ApiControllers extends Controller
                     "empleado_id" =>  $empleado->id
                 ];
 
-                $empleadoRol = EmpleadoRol::create($obj);
+                EmpleadoRol::create($obj);
             }
 
             \DB::commit();
+
+            return array("resp" => "success", "msj" => "Exitoso");
         } catch (\Exception $e) {
 
             \DB::rollback();
             return \Response::json(array("resp" => "error", "msj" => $e->getMessage()), 422);
         }
-
-
-
-
-        /*
-
-        $obj = [
-            "nombre" => $request->input('nombre'),
-            "email" => $request->input('correo'),
-            "sexo" => $request->input('sexo'),
-            "area_id" => $request->input('area'),
-            "descripcion" => $request->input('descripcion'),
-            "boletin" => $request->input('boletin')
-        ];
-
-        $empleado = Empleados::create($obj);
-        $empleado->save();
-
-        $roles = json_decode($request->input('roles'));
-
-        foreach($roles as $rol) {
-
-            $obj = [
-                "rol_id" => $rol,
-                "empleado_id" =>  $empleado->id
-            ];
-
-            $empleadoRol = EmpleadoRol::create($obj);
-            $empleadoRol->save();  
-        }
-
-
-        return $empleado->id;              
-
-
-        return $nombre;
-
-        return \Response::json(array("resp" => "error", "msj" => $request->input('name')), 403);
-
-*/
-        return array("resp" => "error", "msj" => $request->input('name'),);
-
     }
 
     /**Función para obtener los datos del empleado. */
@@ -129,17 +88,18 @@ class ApiControllers extends Controller
         return \Response::json(array("resp" => "success", "empleado" => $empleado, "rolesEmpleado" => $empleadoRol));
     }
 
+    /**Función para eliminar empleado */
     public function eliminarEmpleado($id)
     {
         EmpleadoRol::where('empleado_id', $id)->delete();
         Empleados::find($id)->delete();
-        
+
         return \Response::json(array("resp" => "success"));
     }
 
     /**Función para editar empleado seleccionado */
     public function editarEmpleado(Request $request, $id)
-    { 
+    {
         // transacción de guardado
         try {
 
@@ -200,6 +160,6 @@ class ApiControllers extends Controller
 
             \DB::rollback();
             return \Response::json(array("resp" => "error", "msj" => $e->getMessage()), 422);
-        }        
+        }
     }
 }

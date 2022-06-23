@@ -30,6 +30,7 @@ $(document).on("click", ".open-AddBookDialog", function () {
 });
 
 var idEmpleado;
+
 /**Funcion validaciones campos */
 function validaciones(nombre, correo, sexo, area, descripcion, roles) {
 
@@ -80,21 +81,22 @@ function validaciones(nombre, correo, sexo, area, descripcion, roles) {
     return true;
 }
 
-function eliminarEmpleado(){
+/**Función para eliminar empleado */
+function eliminarEmpleado() {
     $.ajax({
         url: 'api/eliminarEmpleado/' + idEmpleado,
         type: 'delete',
         success: function (response) {
             Swal.fire('Satisfactorio', 'Empleado eliminado correctamente.', 'success').then((result) => {
                 if (result.isConfirmed) {
-                  location.reload();
+                    location.reload();
                 }
             });
         },
         error: function (x) {
             idEmpleado = null;
             //nos dara el error si es que hay alguno
-            alert('error: ' + JSON.stringify(x));
+            Swal.fire('Error', JSON.stringify(x), 'error');
         }
     });
 }
@@ -104,17 +106,16 @@ function add() {
 
     let nombre = $("#nombre").val();
     let correo = $("#correo").val();
-    let sexo = $("#sexo").val();
+    let sexo = document.querySelector('input[name="sexo"]:checked');
     let area = $("#area").val();
     let descripcion = $("#descripcion").val();
     let boletin = 0;
     let boletinInput = $('input[name="boletin"]:checked');
 
-    if(boletinInput.length > 0){
+    if (boletinInput.length > 0) {
         boletin = 1;
     }
 
-    let sexoObli = document.querySelector('input[name="sexo"]:checked');
     let rolesObli = document.querySelector('input[name="roles"]:checked')
 
     let roles = [];
@@ -122,9 +123,9 @@ function add() {
         roles.push(this.value);
     });
 
-    var flag = this.validaciones(nombre, correo, sexoObli, area, descripcion, rolesObli);
-
     // validar campos obligatorios.
+    var flag = this.validaciones(nombre, correo, sexo, area, descripcion, rolesObli);
+
     if (flag == true) {
 
         // se envian los datos
@@ -133,7 +134,7 @@ function add() {
             data: {
                 'nombre': nombre,
                 'correo': correo,
-                'sexo': sexo,
+                'sexo': sexo.value,
                 'area': area,
                 'descripcion': descripcion,
                 'roles': JSON.stringify(roles),
@@ -164,28 +165,29 @@ function openModalEdit(id) {
         url: 'api/openModalEdit/' + id,
         type: 'get',
         success: function (response) {
-            
+
             idEmpleado = response.empleado.id;
 
             $("#nombreEdit").val(response.empleado.nombre);
             $("#correoEdit").val(response.empleado.email);
             $("#areaEdit").val(response.empleado.area_id);
             $("#descripcionEdit").val(response.empleado.descripcion);
-            if(response.empleado.sexo == "M"){
+
+            if (response.empleado.sexo == "M") {
                 $('#sexoEditM').attr('checked', 'checked');
-            }else{
+            } else {
                 $('#sexoEditF').attr('checked', 'checked');
             }
 
             $("input[type=checkbox][name=rolesEdit]").each(function () {
                 let found = response.rolesEmpleado.find(element => element.rol_id == this.value);
-                if(found){
+                if (found) {
                     $(this).prop("checked", true);
 
                 }
             });
 
-            if(response.empleado.boletin == 1){
+            if (response.empleado.boletin == 1) {
                 $('#boletinEdit').attr('checked', 'checked');
             }
 
@@ -194,7 +196,7 @@ function openModalEdit(id) {
         error: function (x) {
             idEmpleado = null;
             //nos dara el error si es que hay alguno
-            alert('error: ' + JSON.stringify(x));
+            Swal.fire('Error', x.responseJSON.msj, 'error');
         }
     });
 
@@ -208,15 +210,15 @@ function editEmpleado() {
     let sexo = document.querySelector('input[name="sexoEdit"]:checked').value;
     let area = $("#areaEdit").val();
     let descripcion = $("#descripcionEdit").val();
-   
+
     let boletin = 0;
     let boletinInput = $('input[name="boletinEdit"]:checked');
 
-    if(boletinInput.length > 0){
+    if (boletinInput.length > 0) {
         boletin = 1;
     }
     let sexoObli = document.querySelector('input[name="sexoEdit"]:checked');
-    
+
     let rolesObli = document.querySelector('input[name="rolesEdit"]:checked')
 
     let roles = [];
@@ -224,14 +226,14 @@ function editEmpleado() {
         roles.push(this.value);
     });
 
+    // validar campos obligatorios.
     var flag = this.validaciones(nombre, correo, sexoObli, area, descripcion, rolesObli);
 
-    // validar campos obligatorios.
     if (flag == true) {
 
         // se envian los datos
         $.ajax({
-            url: 'api/editEmpleado/'+idEmpleado,
+            url: 'api/editEmpleado/' + idEmpleado,
             data: {
                 'nombre': nombre,
                 'correo': correo,
