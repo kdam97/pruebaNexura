@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 Route::post('guardarEmpleado', 'ApiControllers@guardar');
 Route::get('openModalEdit/{id}', 'ApiControllers@peticModalEdit');
 Route::put('editEmpleado/{id}', 'ApiControllers@editarEmpleado');
+Route::delete('eliminarEmpleado/{id}', 'ApiControllers@eliminarEmpleado');
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

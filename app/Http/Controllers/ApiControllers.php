@@ -129,6 +129,14 @@ class ApiControllers extends Controller
         return \Response::json(array("resp" => "success", "empleado" => $empleado, "rolesEmpleado" => $empleadoRol));
     }
 
+    public function eliminarEmpleado($id)
+    {
+        EmpleadoRol::where('empleado_id', $id)->delete();
+        Empleados::find($id)->delete();
+        
+        return \Response::json(array("resp" => "success"));
+    }
+
     /**Función para editar empleado seleccionado */
     public function editarEmpleado(Request $request, $id)
     { 

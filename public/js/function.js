@@ -1,5 +1,27 @@
 $(document).ready(function () {
-    $('#tablaEmpleados').DataTable();
+    $('#tablaEmpleados').DataTable({
+        autoWidth: true,
+        language: {
+            "decimal": "",
+            "emptyTable": "No hay información",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+            "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+            "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ Entradas",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscar:",
+            "zeroRecords": "Sin resultados encontrados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+        },
+    });
 
 });
 
@@ -58,6 +80,25 @@ function validaciones(nombre, correo, sexo, area, descripcion, roles) {
     return true;
 }
 
+function eliminarEmpleado(){
+    $.ajax({
+        url: 'api/eliminarEmpleado/' + idEmpleado,
+        type: 'delete',
+        success: function (response) {
+            Swal.fire('Satisfactorio', 'Empleado eliminado correctamente.', 'success').then((result) => {
+                if (result.isConfirmed) {
+                  location.reload();
+                }
+            });
+        },
+        error: function (x) {
+            idEmpleado = null;
+            //nos dara el error si es que hay alguno
+            alert('error: ' + JSON.stringify(x));
+        }
+    });
+}
+
 /** Funcion para agregar el empleado */
 function add() {
 
@@ -103,7 +144,7 @@ function add() {
 
                 Swal.fire('Satisfactorio', 'Empleado guardado correctamente.', 'success').then((result) => {
                     if (result.isConfirmed) {
-                        // debe de recargar NO OLVIDAR
+                        location.reload();
                     }
                 });
             },
@@ -144,6 +185,10 @@ function openModalEdit(id) {
                 }
             });
 
+            if(response.empleado.boletin == 1){
+                $('#boletinEdit').attr('checked', 'checked');
+            }
+
             $('#editEmployeeModal').modal('show');
         },
         error: function (x) {
@@ -163,8 +208,13 @@ function editEmpleado() {
     let sexo = document.querySelector('input[name="sexoEdit"]:checked').value;
     let area = $("#areaEdit").val();
     let descripcion = $("#descripcionEdit").val();
-    let boletin = $("#boletinEdit").val();
-    console.log(document.querySelector('input[name="sexoEdit"]:checked'));
+   
+    let boletin = 0;
+    let boletinInput = $('input[name="boletinEdit"]:checked');
+
+    if(boletinInput.length > 0){
+        boletin = 1;
+    }
     let sexoObli = document.querySelector('input[name="sexoEdit"]:checked');
     
     let rolesObli = document.querySelector('input[name="rolesEdit"]:checked')
@@ -196,7 +246,7 @@ function editEmpleado() {
 
                 Swal.fire('Satisfactorio', 'Empleado actualizado correctamente.', 'success').then((result) => {
                     if (result.isConfirmed) {
-                        // debe de recargar NO OLVIDAR
+                        location.reload();
                     }
                 });
             },
